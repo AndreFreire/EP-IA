@@ -1,0 +1,12 @@
++---------------------------------------------+
+PARAMETROS UTILIZADOS: 
+Função de otimização: 
+Taxa de Cromossomo: 0.05
+Taxa de Mutação: 0.5
+Quantidade de Gerações: 100
+Tamanho da População: 100
+Tamanho do Cromossomo: 8
+Taxa de elitismo: 0
++---------------------------------------------+
+Geração, Fitness Total, Fitness Médio, Fitness Máximo, Fitness Minimo
+0.0,-6598.6836,-65.98684,-49.91141,-80.690605
