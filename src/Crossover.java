@@ -3,17 +3,18 @@ public class Crossover {
 	 String selectedChrmosome[]; //Armazena o código binário do invididuo selecionado
 	 String crossoverChrmosome[][]; //Armazena os individuos após o crossover
 	 String finalCrossoverChrmosome[];
-
+	 
 	public Crossover(String[] selectedChrmosome) {
 		setSelectedChrmosome(selectedChrmosome);
 	}
 	
-	public  void divCrossover(int qttPoint){
+	public  void divCrossover(int qttPoint, int size){
 		int nParts = qttPoint+1;
 		crossoverChrmosome = new String[getSelectedChrmosome().length][nParts];
 		for(int i = 0; i < getSelectedChrmosome().length; i++){
 			//System.out.println("Individuo "+ i +" antes crossover: "+getSelectedChrmosome()[i]);
-			int maxSize = getSelectedChrmosome()[i].length();
+			int maxSize = size;
+			System.out.println("--------> SIZE: "+size);
 			int halfSize = maxSize/(nParts);//rever isso aqui
 			int nextSize = 0;
 			for(int j = 0; j < nParts; j++){

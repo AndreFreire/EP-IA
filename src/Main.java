@@ -15,14 +15,14 @@ public class Main {
 		Population popA = new Population(3, generationLimit);  //Population(timeLimit, generationLimit)
 		Selector bi = new Selector();
 		
-		popA.startPop(5, ChrmoSize);  //Inicializando população..
+		popA.startPop(100, ChrmoSize);  //Inicializando população..
 		
 		for(int atualGeneration = 0; atualGeneration < popA.getGenerationLimit(); atualGeneration++){
 			System.out.println(atualGeneration+"ª Geração");
 			if(!popA.verifyStop(time, atualGeneration)){
 				popA.setGeneration(atualGeneration);
 						
-				popA.printPopulation();
+				//popA.printPopulation();
 								
 				bi.calcFitness(popA);  //Calculando fitness de cada individuo
 				bi.calcTotalFitness();  //Calculando fitness total da população
@@ -37,13 +37,13 @@ public class Main {
 				}
 				if(random.nextDouble() < probCrossover){
 					bi.makeRoller(); //Criando a seleção por roleta
-					bi.printRoller();
+					//bi.printRoller();
 					bi.selectChrmosomeIndex(2, popA);  //Selecionando os individuos através da roleta 
 					
 					//Inicio da operação de Crossover
 					Crossover cros = new Crossover(bi.getSelectedChrmosome());
-					cros.divCrossover(qttCrossoverPoint); //Crossover de x pontos
-					cros.printCrossover();
+					cros.divCrossover(qttCrossoverPoint, ChrmoSize); //Crossover de x pontos
+					//cros.printCrossover();
 					bi.updateGeneration(cros.getFinalCrossoverChrmosome(), popA); //Atualiza a geração atual com os novos cromossomos
 				}
 				

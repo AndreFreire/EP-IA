@@ -4,8 +4,8 @@ public class Selector {
 	
 	int fitnessVector[]; //Armazena o fitness de cada individuo
 	int totalFitness; //Armazena a soma de todos os fitness
-	double porcentFitnessVector[]; //Armazena o porcentual dos fitness de cada individuo
-	double rollerVector[]; //Armazena a roleta
+	int porcentFitnessVector[]; //Armazena o porcentual dos fitness de cada individuo
+	int rollerVector[]; //Armazena a roleta
 	int selectedIndex[]; //Armazena o indice do individuo selecionados
 	String selectedChrmosome[]; //Armazena o código binário do invididuo selecionado
 	int maxFitness;
@@ -96,7 +96,7 @@ public class Selector {
 	 * Calcula o porcentual do fitness, (fitness individual/fitness total) e armazena em um vetor
 	 */
 	public void calcPorcentFitness(){
-		double porcentFitness[] = new double[getFitnessVector().length];
+		int porcentFitness[] = new int[getFitnessVector().length];
 		for(int nChrmosome = 0; nChrmosome < getFitnessVector().length; nChrmosome++){
 			porcentFitness[nChrmosome] = ((getFitnessVector()[nChrmosome] * 100) / (getTotalFitness()));
 		}
@@ -113,16 +113,18 @@ public class Selector {
 		}
 		setTotalFitness(totalFitness);
 	}
+	int last = 0;
 	
 	//Simula a criação de uma roleta com as porcentagens dos fitness
 	public void makeRoller(){
-		double roller[] = new double[getPorcentFitnessVector().length];
+		int roller[] = new int[getPorcentFitnessVector().length];
 		for(int i = 0; i < getPorcentFitnessVector().length; i++){
 			if(i > 0){
 				roller[i] = getPorcentFitnessVector()[i] + roller[i-1];
 			} else if(i == 0){
 				roller[i] = getPorcentFitnessVector()[i];
 			}
+			last = roller[i];
 		}
 		setRollerVector(roller);
 	}
@@ -132,7 +134,7 @@ public class Selector {
 		int selectedIndex[] = new int[qttChrmosome];
 		String selectedChrmosome[] = new String[qttChrmosome]; 
 		for(int nChrmosome = 0; nChrmosome < qttChrmosome; nChrmosome++){
-			int random = randInt(1, 100); //Sorteia um número de 1 a 100
+			int random = randInt(1, (last-1)); //Sorteia um número de 1 a 100
 			boolean get = false;
 			for(int i = 0; i < getRollerVector().length; i++){
 				if(!get){
@@ -215,19 +217,19 @@ public class Selector {
 		this.totalFitness = totalFitness;
 	}
 	
-	public double[] getPorcentFitnessVector() {
+	public int[] getPorcentFitnessVector() {
 		return porcentFitnessVector;
 	}
 
-	public void setPorcentFitnessVector(double[] porcentFitnessVector) {
+	public void setPorcentFitnessVector(int[] porcentFitnessVector) {
 		this.porcentFitnessVector = porcentFitnessVector;
 	}
 	
-	public double[] getRollerVector() {
+	public int[] getRollerVector() {
 		return rollerVector;
 	}
 
-	public void setRollerVector(double[] rollerVector) {
+	public void setRollerVector(int[] rollerVector) {
 		this.rollerVector = rollerVector;
 	}
 	
