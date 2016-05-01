@@ -6,50 +6,13 @@ public class Population implements Cloneable{
 	String pop[];
 	int generation;
 	int generationLimit;
-	int timeLimit;
 	int populationSize;
 	int sizeChrmosome;
 	String nextGeneration[];
 
-	public String[] getNextGeneration() {
-		return nextGeneration;
-	}
-
-	public void setNextGeneration(String[] nextGeneration) {
-		this.nextGeneration = nextGeneration;
-	}
-
 	//Inicializa a população, definindo os critérios de paradas.
-	public Population(int timeLimit, int generationLimit){
+	public Population(int generationLimit){
 		setGenerationLimit(generationLimit);
-		setTimeLimit(timeLimit);
-	}
-	
-	//Verifica o tempo de execução da população.
-	public boolean verifyTime(int time){
-		if(time > getTimeLimit()){
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	//Verifica a geração da população
-	public boolean verifyGeneration(int generation){
-		if(generation > getGenerationLimit()){
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
-	//Função que verifica os critérios de paradas.
-	public boolean verifyStop(int time, int generation){
-		if(verifyGeneration(generation) || verifyTime(time)){
-			return true;
-		} else {
-			return false;
-		}
 	}
 	
 	/**
@@ -147,14 +110,6 @@ public class Population implements Cloneable{
 		this.pop = pop;
 	}
 
-	public  int getTimeLimit() {
-		return timeLimit;
-	}
-
-	public  void setTimeLimit(int timeLimit) {
-		this.timeLimit = timeLimit;
-	}
-
 	public  int getGenerationLimit() {
 		return generationLimit;
 	}
@@ -187,6 +142,14 @@ public class Population implements Cloneable{
 		this.generation = generation;
 	}
 
+	public String[] getNextGeneration() {
+		return nextGeneration;
+	}
+
+	public void setNextGeneration(String[] nextGeneration) {
+		this.nextGeneration = nextGeneration;
+	}
+	
 	public  void printChrmosome(int index){
 		String vector[] = getPop();
 		System.out.printf(index+"º cromossomo: "+ vector[index]);

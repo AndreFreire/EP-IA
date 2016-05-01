@@ -15,12 +15,19 @@ public class Selector implements Cloneable{
 	public float fBump(float x, float y, float limitSup, float limitInf, int chrmoSize){
 		float newX = functionF(limitSup, limitInf, chrmoSize, x);
 		float newY = functionF(limitSup, limitInf, chrmoSize, y);
+		float z;
 		
-		float temp0 = (float) ((Math.pow(Math.cos(newX), 4)) + (Math.pow(Math.cos(newY), 4)));
-		float temp1 = (float) (2 * (Math.pow(Math.cos(newX), 2)) * (Math.pow(Math.cos(newY), 2)));
-		float temp2 = (float) (Math.sqrt((Math.pow(newX, 2)) + 2 * (Math.pow(newY, 2))));
-		float z = Math.abs((temp0-temp1)/temp2);
-		z = -z;
+		if(newX * newY < 0.75){
+			z = 0;
+		} else if(newX + newY > 7.5*2){
+			z = 0;
+		} else {
+			float temp0 = (float) ((Math.pow(Math.cos(newX), 4)) + (Math.pow(Math.cos(newY), 4)));
+			float temp1 = (float) (2 * (Math.pow(Math.cos(newX), 2)) * (Math.pow(Math.cos(newY), 2)));
+			float temp2 = (float) (Math.sqrt((Math.pow(newX, 2)) + 2 * (Math.pow(newY, 2))));
+			z = Math.abs((temp0-temp1)/temp2);
+			z = -z;
+		}
 		return z;
 	}
 	
@@ -104,8 +111,8 @@ public class Selector implements Cloneable{
 	public void calcMinFitness(){
 		float minFitness = getFitnessVector()[0]; 
 		for (int i = 0; i < getFitnessVector().length; i++) {
-			if(getFitnessVector()[i] < maxFitness){
-				maxFitness = getFitnessVector()[i];
+			if(getFitnessVector()[i] < minFitness){
+				minFitness = getFitnessVector()[i];
 			}
 		}
 		setMinFitness(minFitness);
@@ -156,26 +163,43 @@ public class Selector implements Cloneable{
 	}
 	
 	//Seleciona o individuo através da roleta
-	public void selectChrmosomeIndex(int qttChrmosome, Population pop){
+	public void selectChrmosomeIndex(int qttChrmosome, Population pop, int startWith){
 		int selectedIndex[] = new int[qttChrmosome];
 		String selectedChrmosome[] = new String[qttChrmosome]; 
 		for(int nChrmosome = 0; nChrmosome < qttChrmosome; nChrmosome++){
-			int random = randInt(0, 99); //Sorteia um número de 0 a 99
-			float getted = 0;
+			int random = randInt(startWith, 99); //Sorteia um número de 0 a 99
 			boolean get = false;
-			for(int i = 0; i < getRollerVector().length; i++){
+			for(int i = startWith; i < getRollerVector().length; i++){
 				if(!get){
-					if(random < getRollerVector()[i] && getRollerVector()[i] != getted){
+					if(random < getRollerVector()[i]){
 						selectedIndex[nChrmosome] = i; //Insere o indice do individuo no vetor
 						selectedChrmosome[nChrmosome] = pop.getPop()[i]; //Insere o código binário do individuo
 						get = true;
-						getted = getRollerVector()[i];
 					}
-				}
+				}	
 			}
 		}
 		setSelectedIndex(selectedIndex);
 		setSelectedChrmosome(selectedChrmosome);
+	}
+	
+	public void orderPopulation(Population population){
+		for(int i = 0; i < population.getPopulationSize(); i++){
+			for(int j = 0; j < population.getPopulationSize(); j++){
+				calcFitness(population);
+				if(getFitnessVector()[i] < getFitnessVector()[j]){
+					String aux = population.getPop()[i];
+					population.updatePop(i, population.getPop()[j]);
+					population.updatePop(j, aux);
+				}
+			}
+		}
+	}
+	
+	public void eletism(int n, Population pop){
+		for(int i = 0; i < n; i++){
+			String x = pop.getPop()[i];
+		}
 	}
 	
 	public void updateGeneration(String[] updateChrmossome, Population pop){
@@ -315,5 +339,4 @@ public class Selector implements Cloneable{
 		return null;
 		
 	}
-
 }
