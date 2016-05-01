@@ -14,7 +14,7 @@ public class Crossover {
 		for(int i = 0; i < getSelectedChrmosome().length; i++){
 			//System.out.println("Individuo "+ i +" antes crossover: "+getSelectedChrmosome()[i]);
 			int maxSize = getSelectedChrmosome()[i].length();
-			int halfSize = maxSize/(nParts);
+			int halfSize = maxSize/(nParts);//rever isso aqui
 			int nextSize = 0;
 			for(int j = 0; j < nParts; j++){
 				nextSize = nextSize + halfSize;
