@@ -19,12 +19,17 @@ public class Main {
 		
 		for(int atualGeneration = 0; atualGeneration < popA.getGenerationLimit(); atualGeneration++){
 			System.out.println(atualGeneration+"ª Geração");
+			
+			
 			if(!popA.verifyStop(time, atualGeneration)){
 				popA.setGeneration(atualGeneration);
 				popA.setSizeChrmosome(CHRMO_SIZE);
-						
+
+				Population pop_aux = popA.clone();
+				Selector bi_aux = bi.clone();			
+				
 				//popA.printPopulation();
-								
+
 				bi.calcFitness(popA);  //Calculando fitness de cada individuo
 				bi.calcTotalFitness();  //Calculando fitness total da população
 				
@@ -63,8 +68,26 @@ public class Main {
 					bi.updateGeneration(mut.getMutationChrmosome(), popA);
 				}
 				
-				bi.calcMedFitness(); //Cálculo da média do fitness no fim da geração.
-				//lastMedFitness = bi.getMedFitness();
+				bi.calcMedFitness(); //Cálculo da média do fitness no fim da geração.				
+				//bi.printFitnessPorcent();
+				
+				
+				
+				try{
+					for(int i = 0; i < popA.getPopulationSize(); i++){
+						if(bi_aux.getFitnessVector()[i]> bi.getFitnessVector()[i]){
+							popA.updatePop(i, pop_aux.getPop()[i]);
+						}
+					}
+					
+					bi.calcFitness(popA);  //Calculando fitness de cada individuo
+					bi.calcTotalFitness();  //Calculando fitness total da população
+					
+					//bi.printFitness();
+					bi.calcPorcentFitness();  //Calculando fitness porcentual de cada individuo da população
+					//bi.printFitnessPorcent();
+				}catch(Exception e){}
+				
 				bi.calcMaxFitness();
 				bi.calcMinFitness();
 				System.out.println("Fitness Total: "+bi.getTotalFitness());

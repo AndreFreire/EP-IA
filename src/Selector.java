@@ -1,7 +1,6 @@
-import java.math.BigDecimal;
 import java.util.Random;
 
-public class Selector {
+public class Selector implements Cloneable{
 	
 	float fitnessVector[]; //Armazena o fitness de cada individuo
 	float totalFitness; //Armazena a soma de todos os fitness
@@ -161,7 +160,7 @@ public class Selector {
 		int selectedIndex[] = new int[qttChrmosome];
 		String selectedChrmosome[] = new String[qttChrmosome]; 
 		for(int nChrmosome = 0; nChrmosome < qttChrmosome; nChrmosome++){
-			int random = randInt(0, 99); //Sorteia um número de 1 a 100
+			int random = randInt(0, 99); //Sorteia um número de 0 a 99
 			float getted = 0;
 			boolean get = false;
 			for(int i = 0; i < getRollerVector().length; i++){
@@ -306,5 +305,15 @@ public class Selector {
 		this.medFitness = medFitness;
 	}
 
+	public Selector clone() {
+		try {
+			return (Selector) super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
 
 }
