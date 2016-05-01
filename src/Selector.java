@@ -128,8 +128,6 @@ public class Selector {
 		setTotalFitness(totalFitness);
 	}
 	
-	float last = 0;
-	
 	//Simula a criação de uma roleta com as porcentagens dos fitness
 	public void makeRoller(){
 		float roller[] = new float[getPorcentFitnessVector().length];
@@ -139,7 +137,6 @@ public class Selector {
 			} else if(i == 0){
 				roller[i] = getPorcentFitnessVector()[i];
 			}
-			last = roller[i];
 			//System.out.println(roller[i]);
 		}
 		setRollerVector(roller);
