@@ -42,7 +42,7 @@ public class Mutation {
 	}
 	
 	//Define o ponto de mutação.
-	public  void mutationPoint(){
+	public void mutationPoint(){
 		int point = randInt(1, getSelectedChrmosome()[0].length());
 		setMutationPoint(point);
 	}

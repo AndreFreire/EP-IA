@@ -4,12 +4,12 @@ public class Main {
 
 	public static void main(String[] args) {
 		int time = 0;
-		int CHRMO_SIZE = 5; //Tamanho de cada cromossomo
+		int CHRMO_SIZE = 20; //Tamanho de cada cromossomo
 		int CROSSOVER_POINT = 1; //Quantidade de pontos que serão feitos o crossover.
 		int GENERATION_LIMIT = 10;
 		int POP_SIZE = 100;
 		double PROB_CROSSOVER = 1; //Probabilidade de crossover
-		double PROB_MUTATION = 0.3; //Probabilidade de mutação.
+		double PROB_MUTATION = 1; //Probabilidade de mutação.
 		Random random = new Random();
 		
 		Population popA = new Population(3, GENERATION_LIMIT);  //Population(timeLimit, GENERATION_LIMIT)
@@ -24,12 +24,12 @@ public class Main {
 			if(!popA.verifyStop(time, atualGeneration)){
 				popA.setGeneration(atualGeneration);
 				popA.setSizeChrmosome(CHRMO_SIZE);
-				
+
 				Population pop_aux = popA.clone();
 				Selector bi_aux = bi.clone();			
 				
-				popA.printPopulation();
-								
+				//popA.printPopulation();
+
 				bi.calcFitness(popA);  //Calculando fitness de cada individuo
 				bi.calcTotalFitness();  //Calculando fitness total da população
 				
@@ -68,11 +68,11 @@ public class Main {
 					bi.updateGeneration(mut.getMutationChrmosome(), popA);
 				}
 				
-				bi.calcMedFitness(); //Cálculo da média do fitness no fim da geração.
-				//lastMedFitness = bi.getMedFitness();
-				
+				bi.calcMedFitness(); //Cálculo da média do fitness no fim da geração.				
 				//bi.printFitnessPorcent();
-
+				
+				
+				
 				try{
 					for(int i = 0; i < popA.getPopulationSize(); i++){
 						if(bi_aux.getFitnessVector()[i]> bi.getFitnessVector()[i]){
@@ -87,6 +87,17 @@ public class Main {
 					bi.calcPorcentFitness();  //Calculando fitness porcentual de cada individuo da população
 					//bi.printFitnessPorcent();
 				}catch(Exception e){}
+				
+				bi.calcMaxFitness();
+				bi.calcMinFitness();
+				System.out.println("Fitness Total: "+bi.getTotalFitness());
+				System.out.println("Fitness Médio: "+bi.getMedFitness());
+				System.out.println("Fitness Máximo: "+bi.getMaxFitness());
+				System.out.println("Fitness Minimo: "+bi.getMinFitness());
+				//bi.printFitnessPorcent();
+				
+				popA.setNextGeneration(popA.getPop()); //Define os cromossomos que serão passados para a próxima geração.
+				popA.immediateReplacement(popA.getNextGeneration());
 			}
 			System.out.println("\n-- x --\n");
 		}

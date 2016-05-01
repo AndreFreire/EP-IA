@@ -9,30 +9,38 @@ public class Selector implements Cloneable{
 	int selectedIndex[]; //Armazena o indice do individuo selecionados
 	String selectedChrmosome[]; //Armazena o código binário do invididuo selecionado
 	float maxFitness;
-	
 	float minFitness;
 	float medFitness;
 	
-	public float fBump(float x, float y){
-		float temp0 = (float) ((Math.pow(Math.cos(x), 4)) + (Math.pow(Math.cos(y), 4)));
-		float temp1 = (float) (2 * ((Math.pow(Math.cos(x), 2)) * (Math.pow(Math.cos(y), 2))));
-		float temp2 = (float) (Math.sqrt((Math.pow(x, 2)) + (Math.pow(2 * y, 2))));
+	public float fBump(float x, float y, float limitSup, float limitInf, int chrmoSize){
+		float newX = functionF(limitSup, limitInf, chrmoSize, x);
+		float newY = functionF(limitSup, limitInf, chrmoSize, y);
+		
+		float temp0 = (float) ((Math.pow(Math.cos(newX), 4)) + (Math.pow(Math.cos(newY), 4)));
+		float temp1 = (float) (2 * (Math.pow(Math.cos(newX), 2)) * (Math.pow(Math.cos(newY), 2)));
+		float temp2 = (float) (Math.sqrt((Math.pow(newX, 2)) + 2 * (Math.pow(newY, 2))));
 		float z = Math.abs((temp0-temp1)/temp2);
 		z = -z;
 		return z;
 	}
 	
-	public float fGold(float x, float y){
-		float a = (float) (Math.pow(1*(x+y+1), 2)*(19-14*x+3*(Math.pow(x, 2))-14*y+6*x*y+3*(Math.pow(y, 2))));
-		float b = (float) (30+(Math.pow((2*x-3*y), 2))*(18-32*x+12*(Math.pow(x, 2))+48*y-36*x*y+27*Math.pow(y, 2)));
+	public float fGold(float x, float y, float limitSup, float limitInf, int chrmoSize){
+		float newX = functionF(limitSup, limitInf, chrmoSize, x);
+		float newY = functionF(limitSup, limitInf, chrmoSize, y);
+		
+		float a = (float) (Math.pow(1*(newX+newY+1), 2)*(19-14*newX+3*(Math.pow(newX, 2))-14*newY+6*newX*newY+3*(Math.pow(newY, 2))));
+		float b = (float) (30+(Math.pow((2*newX-3*newY), 2))*(18-32*newX+12*(Math.pow(newX, 2))+48*newY-36*newX*newY+27*Math.pow(newY, 2)));
 		float z = a*b;
 		z = -z;
 		return z;
 	}
 	
-	public float fRastrigin(float x, float y){
-		float zx = (float) (Math.pow(x, 2)-10*Math.cos(2*Math.PI*x)+10);
-		float zy = (float) (Math.pow(y, 2)-10*Math.cos(2*Math.PI*y)+10);
+	public float fRastrigin(float x, float y, float limitSup, float limitInf, int chrmoSize){
+		float newX = functionF(limitSup, limitInf, chrmoSize, x);
+		float newY = functionF(limitSup, limitInf, chrmoSize, y);
+		
+		float zx = (float) (Math.pow(newX, 2)-10*Math.cos(2*Math.PI*newX)+10);
+		float zy = (float) (Math.pow(newY, 2)-10*Math.cos(2*Math.PI*newY)+10);
 		float z = zx+zy;
 		z = -z;
 		return z;
@@ -41,6 +49,11 @@ public class Selector implements Cloneable{
 	public int binaryToInt(String binary){
 		int value = Integer.parseInt(binary, 2);
 		return value;
+	}
+	
+	public float functionF(float limitSup, float limitInf, int chrmoSize, float x){
+		float real = (float) (limitInf + ((limitSup - limitInf) / (Math.pow(2, chrmoSize) - 1)) * x);
+		return real;
 	}
 	
 	/**
@@ -55,6 +68,7 @@ public class Selector implements Cloneable{
 		float intFirstPart, intSecondPart;
 		int size = population.getSizeChrmosome();
 		int half = size/2;
+		
 	    for(int nChrmosome = 0; nChrmosome < population.getPopulationSize(); nChrmosome++){
 	    	//Divisão do cromossomo em 2 partes.
 	    	stringFirstPart = pop[nChrmosome].substring(0, half);
@@ -63,9 +77,9 @@ public class Selector implements Cloneable{
 	    	intFirstPart = binaryToInt(stringFirstPart);
 	    	intSecondPart = binaryToInt(stringSecondPart);
 	    	//preencher o vetor de fitness com os valores
-	    	//fitness[nChrmosome] = fGold(intFirstPart, intSecondPart);
-	    	fitness[nChrmosome] = fRastrigin(intFirstPart, intSecondPart);
-	    	//fitness[nChrmosome] = fBump(intFirstPart, intSecondPart);
+	    	//fitness[nChrmosome] = fGold(intFirstPart, intSecondPart, -2, 2, population.getSizeChrmosome());
+	    	fitness[nChrmosome] = fRastrigin(intFirstPart, intSecondPart, -5, 5, population.getSizeChrmosome());
+	    	//fitness[nChrmosome] = fBump(intFirstPart, intSecondPart, 0, 10, population.getSizeChrmosome());
 	    }
 	    setFitnessVector(fitness);
 		return 0;
@@ -120,7 +134,7 @@ public class Selector implements Cloneable{
 	 * Calcula o fitness total da população.
 	 */
 	public void calcTotalFitness(){
-		int totalFitness = 0;
+		float totalFitness = 0;
 		for (int i = 0; i < getFitnessVector().length; i++) {
 			totalFitness += getFitnessVector()[i];
 		}
@@ -160,7 +174,6 @@ public class Selector implements Cloneable{
 				}
 			}
 		}
-		
 		setSelectedIndex(selectedIndex);
 		setSelectedChrmosome(selectedChrmosome);
 	}
@@ -169,7 +182,7 @@ public class Selector implements Cloneable{
 		for(int i = 0; i < getRollerVector().length; i++){
 			for (int j = 0; j < getSelectedIndex().length; j++){
 				if(i == getSelectedIndex()[j]){
-					System.out.println("individuo atualizado: "+j+" : "+updateChrmossome[j]);
+					//System.out.println("individuo atualizado: "+j+" : "+updateChrmossome[j]);
 					pop.getPop()[i] = updateChrmossome[j];
 				}
 			}
