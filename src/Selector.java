@@ -1,47 +1,49 @@
+import java.math.BigDecimal;
 import java.util.Random;
 
 public class Selector {
 	
-	int fitnessVector[]; //Armazena o fitness de cada individuo
-	int totalFitness; //Armazena a soma de todos os fitness
-	int porcentFitnessVector[]; //Armazena o porcentual dos fitness de cada individuo
-	int rollerVector[]; //Armazena a roleta
+	float fitnessVector[]; //Armazena o fitness de cada individuo
+	float totalFitness; //Armazena a soma de todos os fitness
+	float porcentFitnessVector[]; //Armazena o porcentual dos fitness de cada individuo
+	float rollerVector[]; //Armazena a roleta
 	int selectedIndex[]; //Armazena o indice do individuo selecionados
 	String selectedChrmosome[]; //Armazena o código binário do invididuo selecionado
-	int maxFitness;
+	float maxFitness;
 	
-	public int getMaxFitness() {
-		return maxFitness;
+	float minFitness;
+	float medFitness;
+	
+	public float fBump(float x, float y){
+		float temp0 = (float) ((Math.pow(Math.cos(x), 4)) + (Math.pow(Math.cos(y), 4)));
+		float temp1 = (float) (2 * ((Math.pow(Math.cos(x), 2)) * (Math.pow(Math.cos(y), 2))));
+		float temp2 = (float) (Math.sqrt((Math.pow(x, 2)) + (Math.pow(2 * y, 2))));
+		float z = Math.abs((temp0-temp1)/temp2);
+		z = -z;
+		return z;
 	}
-
-
-	public void setMaxFitness(int maxFitness) {
-		this.maxFitness = maxFitness;
+	
+	public float fGold(float x, float y){
+		float a = (float) (Math.pow(1*(x+y+1), 2)*(19-14*x+3*(Math.pow(x, 2))-14*y+6*x*y+3*(Math.pow(y, 2))));
+		float b = (float) (30+(Math.pow((2*x-3*y), 2))*(18-32*x+12*(Math.pow(x, 2))+48*y-36*x*y+27*Math.pow(y, 2)));
+		float z = a*b;
+		z = -z;
+		return z;
 	}
-
-
-	public int getMinFitness() {
-		return minFitness;
+	
+	public float fRastrigin(float x, float y){
+		float zx = (float) (Math.pow(x, 2)-10*Math.cos(2*Math.PI*x)+10);
+		float zy = (float) (Math.pow(y, 2)-10*Math.cos(2*Math.PI*y)+10);
+		float z = zx+zy;
+		z = -z;
+		return z;
 	}
-
-
-	public void setMinFitness(int minFitness) {
-		this.minFitness = minFitness;
+	
+	public int binaryToInt(String binary){
+		int value = Integer.parseInt(binary, 2);
+		return value;
 	}
-
-
-	public int getMedFitness() {
-		return medFitness;
-	}
-
-
-	public void setMedFitness(int medFitness) {
-		this.medFitness = medFitness;
-	}
-
-	int minFitness;
-	int medFitness;
-
+	
 	/**
 	 * Calcula o fitness de cada cromossomo
 	 * @param population população que seŕa calculada o fitness
@@ -49,20 +51,32 @@ public class Selector {
 	 */
 	public int calcFitness(Population population){
 		String pop[] = population.getPop();
-		int fitness[] = new int[population.getPopulationSize()];
+		float fitness[] = new float[population.getPopulationSize()];
+		String stringFirstPart, stringSecondPart;
+		float intFirstPart, intSecondPart;
+		int size = population.getSizeChrmosome();
+		int half = size/2;
 	    for(int nChrmosome = 0; nChrmosome < population.getPopulationSize(); nChrmosome++){
-	    	fitness[nChrmosome] = Integer.parseInt(pop[nChrmosome], 2);
+	    	//Divisão do cromossomo em 2 partes.
+	    	stringFirstPart = pop[nChrmosome].substring(0, half);
+	    	stringSecondPart = pop[nChrmosome].substring(half, size);
+	    	//Conversão binario inteiro das duas partes
+	    	intFirstPart = binaryToInt(stringFirstPart);
+	    	intSecondPart = binaryToInt(stringSecondPart);
+	    	//preencher o vetor de fitness com os valores
+	    	//fitness[nChrmosome] = fGold(intFirstPart, intSecondPart);
+	    	fitness[nChrmosome] = fRastrigin(intFirstPart, intSecondPart);
+	    	//fitness[nChrmosome] = fBump(intFirstPart, intSecondPart);
 	    }
 	    setFitnessVector(fitness);
 		return 0;
 	}
 
-
 	/**
 	 * Calcula o maior fitness da população.
 	 */
 	public void calcMaxFitness(){
-		int maxFitness = getFitnessVector()[0];		
+		float maxFitness = getFitnessVector()[0];		
 		for (int i = 0; i < getFitnessVector().length; i++) {
 			if(getFitnessVector()[i] > maxFitness){
 				maxFitness = getFitnessVector()[i];
@@ -75,7 +89,7 @@ public class Selector {
 	 * Calcula o menor fitness da população.
 	 */
 	public void calcMinFitness(){
-		int minFitness = getFitnessVector()[0]; 
+		float minFitness = getFitnessVector()[0]; 
 		for (int i = 0; i < getFitnessVector().length; i++) {
 			if(getFitnessVector()[i] < maxFitness){
 				maxFitness = getFitnessVector()[i];
@@ -88,7 +102,7 @@ public class Selector {
 	 * Calcula a media de todos os fitness da população
 	 */
 	public void calcMedFitness(){
-		int medFitness = getTotalFitness()/getFitnessVector().length;
+		float medFitness = getTotalFitness()/getFitnessVector().length;
 		setMedFitness(medFitness);
 	}
 	
@@ -96,7 +110,7 @@ public class Selector {
 	 * Calcula o porcentual do fitness, (fitness individual/fitness total) e armazena em um vetor
 	 */
 	public void calcPorcentFitness(){
-		int porcentFitness[] = new int[getFitnessVector().length];
+		float porcentFitness[] = new float[getFitnessVector().length];
 		for(int nChrmosome = 0; nChrmosome < getFitnessVector().length; nChrmosome++){
 			porcentFitness[nChrmosome] = ((getFitnessVector()[nChrmosome] * 100) / (getTotalFitness()));
 		}
@@ -113,11 +127,12 @@ public class Selector {
 		}
 		setTotalFitness(totalFitness);
 	}
-	int last = 0;
+	
+	float last = 0;
 	
 	//Simula a criação de uma roleta com as porcentagens dos fitness
 	public void makeRoller(){
-		int roller[] = new int[getPorcentFitnessVector().length];
+		float roller[] = new float[getPorcentFitnessVector().length];
 		for(int i = 0; i < getPorcentFitnessVector().length; i++){
 			if(i > 0){
 				roller[i] = getPorcentFitnessVector()[i] + roller[i-1];
@@ -125,6 +140,7 @@ public class Selector {
 				roller[i] = getPorcentFitnessVector()[i];
 			}
 			last = roller[i];
+			//System.out.println(roller[i]);
 		}
 		setRollerVector(roller);
 	}
@@ -134,14 +150,16 @@ public class Selector {
 		int selectedIndex[] = new int[qttChrmosome];
 		String selectedChrmosome[] = new String[qttChrmosome]; 
 		for(int nChrmosome = 0; nChrmosome < qttChrmosome; nChrmosome++){
-			int random = randInt(1, (last-1)); //Sorteia um número de 1 a 100
+			int random = randInt(1, 100); //Sorteia um número de 1 a 100
+			float getted = 0;
 			boolean get = false;
 			for(int i = 0; i < getRollerVector().length; i++){
 				if(!get){
-					if(random < getRollerVector()[i]){
+					if(random < getRollerVector()[i] && getRollerVector()[i] != getted){
 						selectedIndex[nChrmosome] = i; //Insere o indice do individuo no vetor
 						selectedChrmosome[nChrmosome] = pop.getPop()[i]; //Insere o código binário do individuo
 						get = true;
+						getted = getRollerVector()[i];
 					}
 				}
 			}
@@ -155,7 +173,7 @@ public class Selector {
 		for(int i = 0; i < getRollerVector().length; i++){
 			for (int j = 0; j < getSelectedIndex().length; j++){
 				if(i == getSelectedIndex()[j]){
-					//System.out.println("individuo "+j+" : "+updateChrmossome[j]);
+					System.out.println("individuo atualizado: "+j+" : "+updateChrmossome[j]);
 					pop.getPop()[i] = updateChrmossome[j];
 				}
 			}
@@ -201,35 +219,35 @@ public class Selector {
 	    return randomNum;
 	}
 	
-	public int[] getFitnessVector() {
+	public float[] getFitnessVector() {
 		return fitnessVector;
 	}
 
-	public void setFitnessVector(int[] fitness) {
+	public void setFitnessVector(float[] fitness) {
 		this.fitnessVector = fitness;
 	}
 	
-	public int getTotalFitness() {
+	public float getTotalFitness() {
 		return totalFitness;
 	}
 
-	public void setTotalFitness(int totalFitness) {
+	public void setTotalFitness(float totalFitness) {
 		this.totalFitness = totalFitness;
 	}
 	
-	public int[] getPorcentFitnessVector() {
+	public float[] getPorcentFitnessVector() {
 		return porcentFitnessVector;
 	}
 
-	public void setPorcentFitnessVector(int[] porcentFitnessVector) {
+	public void setPorcentFitnessVector(float[] porcentFitnessVector) {
 		this.porcentFitnessVector = porcentFitnessVector;
 	}
 	
-	public int[] getRollerVector() {
+	public float[] getRollerVector() {
 		return rollerVector;
 	}
 
-	public void setRollerVector(int[] rollerVector) {
+	public void setRollerVector(float[] rollerVector) {
 		this.rollerVector = rollerVector;
 	}
 	
@@ -248,4 +266,35 @@ public class Selector {
 	public void setSelectedChrmosome(String[] selectedChrmosome) {
 		this.selectedChrmosome = selectedChrmosome;
 	}
+	
+	public float getMaxFitness() {
+		return maxFitness;
+	}
+
+
+	public void setMaxFitness(float maxFitness) {
+		this.maxFitness = maxFitness;
+	}
+
+
+	public float getMinFitness() {
+		return minFitness;
+	}
+
+
+	public void setMinFitness(float minFitness) {
+		this.minFitness = minFitness;
+	}
+
+
+	public float getMedFitness() {
+		return medFitness;
+	}
+
+
+	public void setMedFitness(float medFitness) {
+		this.medFitness = medFitness;
+	}
+
+
 }

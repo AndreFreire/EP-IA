@@ -12,9 +12,8 @@ public class Crossover {
 		int nParts = qttPoint+1;
 		crossoverChrmosome = new String[getSelectedChrmosome().length][nParts];
 		for(int i = 0; i < getSelectedChrmosome().length; i++){
-			//System.out.println("Individuo "+ i +" antes crossover: "+getSelectedChrmosome()[i]);
+			System.out.println("Individuo "+ i +" antes crossover: "+getSelectedChrmosome()[i]);
 			int maxSize = size;
-			System.out.println("--------> SIZE: "+size);
 			int halfSize = maxSize/(nParts);//rever isso aqui
 			int nextSize = 0;
 			for(int j = 0; j < nParts; j++){
@@ -61,11 +60,8 @@ public class Crossover {
 	}
 	
 	public  void printCrossover(){
-		for (int i = 0; i < getCrossoverChrmosome().length; i++) {
-			System.out.print("Individuo "+ i +" após crossover: ");
-			for (int j = 0; j < getCrossoverChrmosome()[0].length; j++){  
-				System.out.print(getCrossoverChrmosome()[i][j]);  
-			}
+		for (int i = 0; i < getFinalCrossoverChrmosome().length; i++) {
+			System.out.print("Individuo "+ i +" após crossover: "+getFinalCrossoverChrmosome()[i]);
 			System.out.println("");
 		}
 	}
