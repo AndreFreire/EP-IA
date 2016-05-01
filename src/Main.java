@@ -19,10 +19,15 @@ public class Main {
 		
 		for(int atualGeneration = 0; atualGeneration < popA.getGenerationLimit(); atualGeneration++){
 			System.out.println(atualGeneration+"ª Geração");
+			
+			
 			if(!popA.verifyStop(time, atualGeneration)){
 				popA.setGeneration(atualGeneration);
 				popA.setSizeChrmosome(CHRMO_SIZE);
-						
+				
+				Population pop_aux = popA.clone();
+				Selector bi_aux = bi.clone();			
+				
 				popA.printPopulation();
 								
 				bi.calcFitness(popA);  //Calculando fitness de cada individuo
@@ -66,15 +71,22 @@ public class Main {
 				bi.calcMedFitness(); //Cálculo da média do fitness no fim da geração.
 				//lastMedFitness = bi.getMedFitness();
 				
-				System.out.println("Fitness Total: "+bi.getTotalFitness());
-				System.out.println("Fitness Médio: "+bi.getMedFitness());
 				//bi.printFitnessPorcent();
-				
-				/*popA.setToNextGeneration(cros.getFinalCrossoverChrmosome()); //Define os cromossomos que serão passados para a próxima geração.
-				
-				for(int i = 0; i < popA.getToNextGeneration().length; i++){
-					System.out.println(popA.getToNextGeneration()[i]);
-				}*/
+
+				try{
+					for(int i = 0; i < popA.getPopulationSize(); i++){
+						if(bi_aux.getFitnessVector()[i]> bi.getFitnessVector()[i]){
+							popA.updatePop(i, pop_aux.getPop()[i]);
+						}
+					}
+					
+					bi.calcFitness(popA);  //Calculando fitness de cada individuo
+					bi.calcTotalFitness();  //Calculando fitness total da população
+					
+					//bi.printFitness();
+					bi.calcPorcentFitness();  //Calculando fitness porcentual de cada individuo da população
+					//bi.printFitnessPorcent();
+				}catch(Exception e){}
 			}
 			System.out.println("\n-- x --\n");
 		}

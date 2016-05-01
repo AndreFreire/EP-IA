@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class Population {
+public class Population implements Cloneable{
 	
 	//Vetor de população.
 	String pop[];
@@ -146,6 +146,10 @@ public class Population {
 		return pop;
 	}
 	
+	public void updatePop(int index, String chrmosome){
+		this.pop[index] = chrmosome;
+	}
+	
 	public String[] getPop() {
 		return pop;
 	}
@@ -216,5 +220,15 @@ public class Population {
 		   System.out.printf(i+"º cromossomo: "+ vector[i]);
 		   System.out.printf("\n");
 		}
+	}
+	public Population clone(){
+		try {
+			return (Population) super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
 	}
 }
