@@ -1,3 +1,5 @@
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 public class Selector implements Cloneable{
@@ -11,6 +13,9 @@ public class Selector implements Cloneable{
 	float maxFitness;
 	float minFitness;
 	float medFitness;
+	int rowMedFitnessLenght = 10;
+	float differenceToStop = (float) 0.01;
+	List<Float> rowMedFitness = new LinkedList<Float>();
 	
 	public float fBump(float x, float y, float limitSup, float limitInf, int chrmoSize){
 		float newX = functionF(limitSup, limitInf, chrmoSize, x);
@@ -123,6 +128,7 @@ public class Selector implements Cloneable{
 	 */
 	public void calcMedFitness(){
 		float medFitness = getTotalFitness()/getFitnessVector().length;
+		setRowMedFitness(medFitness);
 		setMedFitness(medFitness);
 	}
 	
@@ -327,6 +333,21 @@ public class Selector implements Cloneable{
 
 	public void setMedFitness(float medFitness) {
 		this.medFitness = medFitness;
+	}
+	
+	public void setRowMedFitness(float medFitness){
+		if(rowMedFitness.size() > rowMedFitnessLenght){
+			rowMedFitness.remove(0);			
+		}
+		rowMedFitness.add(medFitness);
+	}
+	
+	public boolean isStop(){
+		if(this.rowMedFitness.size() < this.rowMedFitnessLenght) return false;
+
+		if(this.rowMedFitness.get(this.rowMedFitnessLenght-1) - this.rowMedFitness.get(0) >= this.rowMedFitness.get(this.rowMedFitnessLenght-1) * this.differenceToStop)return true;
+
+		return false;
 	}
 
 	public Selector clone() {

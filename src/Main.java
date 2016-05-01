@@ -18,6 +18,7 @@ public class Main {
 		popA.startPop(POP_SIZE, CHRMO_SIZE);  //Inicializando população..
 		
 		for(int atualGeneration = 0; atualGeneration < popA.getGenerationLimit(); atualGeneration++){
+			if(bi.isStop()) break;
 			System.out.println(atualGeneration+"ª Geração");
 				popA.setGeneration(atualGeneration);
 				popA.setSizeChrmosome(CHRMO_SIZE);
