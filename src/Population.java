@@ -128,8 +128,9 @@ public class Population {
 	 */
 	public  String[] startPop(int largeness, int sizeChrmosome){
 		setSizeChrmosome(sizeChrmosome);	
+		setPopulationSize(largeness);
 		 
-		pop = new String[populationSize];
+		pop = new String[largeness];
 		
 		setPop(fillPop(this.pop));
 		
@@ -145,11 +146,11 @@ public class Population {
 		return pop;
 	}
 	
-	public  String[] getPop() {
+	public String[] getPop() {
 		return pop;
 	}
 
-	public  void setPop(String[] pop) {
+	public void setPop(String[] pop) {
 		this.pop = pop;
 	}
 
@@ -209,6 +210,7 @@ public class Population {
 	
 	public  void printPopulation(){
 		String vector[] = getPop();
+
 		int i;
 		for (i=0; i<vector.length; i++) {
 		   System.out.printf(i+"º cromossomo: "+ vector[i]);
