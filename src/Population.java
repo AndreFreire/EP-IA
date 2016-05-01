@@ -9,7 +9,15 @@ public class Population {
 	int timeLimit;
 	int populationSize;
 	int sizeChrmosome;
-	String toNextGeneration[];
+	String nextGeneration[];
+
+	public String[] getNextGeneration() {
+		return nextGeneration;
+	}
+
+	public void setNextGeneration(String[] nextGeneration) {
+		this.nextGeneration = nextGeneration;
+	}
 
 	//Inicializa a população, definindo os critérios de paradas.
 	public Population(int timeLimit, int generationLimit){
@@ -70,29 +78,10 @@ public class Population {
 	 * @param pop vetor de população.
 	 * @return
 	 */
-	public  String[] fillNextPop(String[] pop){
-		/*int index = 0;
-		for(int i = 0; i < getToNextGeneration().length; i++){
-			pop[i] = getToNextGeneration()[i];
-			index = i;
+	public String[] immediateReplacement(String[] newPopulation){
+		for(int i = 0; i < newPopulation.length; i++){
+			this.pop[i] = newPopulation[i];
 		}
-		for(int x = index + 1; x < getPopulationSize() ; x++){
-			for(int y = 0; y < getSizeChrmosome(); y++){
-				if(randInt(0, 1) < 0.5){
-					if(y == 0){
-						pop[x] = "0";
-					} else {
-						pop[x] = pop[x] + "0";
-					}
-				} else {
-					if(y == 0){
-						pop[x] = "1";
-					} else {
-						pop[x] = pop[x] + "1";
-					}
-				}
-			}
-		}*/
 		return pop;
 	}
 	
@@ -184,14 +173,6 @@ public class Population {
 
 	public  void setSizeChrmosome(int sizeChrmosome) {
 		this.sizeChrmosome = sizeChrmosome;
-	}
-	
-	public  String[] getToNextGeneration() {
-		return toNextGeneration;
-	}
-
-	public  void setToNextGeneration(String[] toNextGeneration) {
-		this.toNextGeneration = toNextGeneration;
 	}
 	
 	public  int getGeneration() {

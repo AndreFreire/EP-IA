@@ -12,7 +12,7 @@ public class Crossover {
 		int nParts = qttPoint+1;
 		crossoverChrmosome = new String[getSelectedChrmosome().length][nParts];
 		for(int i = 0; i < getSelectedChrmosome().length; i++){
-			System.out.println("Individuo "+ i +" antes crossover: "+getSelectedChrmosome()[i]);
+			//System.out.println("Individuo "+ i +" antes crossover: "+getSelectedChrmosome()[i]);
 			int maxSize = size;
 			int halfSize = maxSize/(nParts);//rever isso aqui
 			int nextSize = 0;
