@@ -12,11 +12,13 @@ public class Main {
 		Population popA = new Population(3, generationLimit);  //Population(timeLimit, generationLimit)
 		Selector bi = new Selector();
 		
+		popA.startPop(2, ChrmoSize);  //Inicializando população..
+		
 		for(int atualGeneration = 0; atualGeneration < popA.getGenerationLimit(); atualGeneration++){
 			System.out.println(atualGeneration+"ª Geração");
 			if(!popA.verifyStop(time, atualGeneration)){
 				popA.setGeneration(atualGeneration);
-				popA.startPop(2, ChrmoSize, atualGeneration);  //Inicializando população..		
+						
 				popA.printPopulation();
 								
 				bi.calcFitness(popA);  //Calculando fitness de cada individuo

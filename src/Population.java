@@ -126,18 +126,12 @@ public class Population {
 	 * @param sizeChrmosome -> Tamanho do cromossomo
 	 * @return
 	 */
-	public  String[] startPop(int largeness, int sizeChrmosome, int gen){
+	public  String[] startPop(int largeness, int sizeChrmosome){
 		setSizeChrmosome(sizeChrmosome);	
+		 
+		pop = new String[populationSize];
 		
-		//int populationSize = popSize(largeness); 
-		//String[] pop = new String[populationSize];
-		
-		if(gen == 0){
-			setPop(fillPop(this.pop));
-		} else {
-			setPop(fillNextPop(pop));
-		}
-		
+		setPop(fillPop(this.pop));
 		
 		return pop;
 	}
