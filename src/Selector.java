@@ -13,9 +13,14 @@ public class Selector implements Cloneable{
 	float maxFitness;
 	float minFitness;
 	float medFitness;
-	int rowMedFitnessLenght = 10;
-	float differenceToStop = (float) 0.01;
+	int rowMedFitnessLenght;
+	float differenceToStop;
 	List<Float> rowMedFitness = new LinkedList<Float>();
+	
+	public Selector(int rowMedFitnessLenght,float differenceToStop){
+		this.rowMedFitnessLenght = rowMedFitnessLenght;
+		this.differenceToStop = differenceToStop;
+	}
 	
 	public float fBump(float x, float y, float limitSup, float limitInf, int chrmoSize){
 		float newX = functionF(limitSup, limitInf, chrmoSize, x);
